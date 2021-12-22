@@ -1,0 +1,57 @@
+<div class="account">
+    Signed in as {{account.name}}
+</div>
+
+<mat-sidenav-container>
+
+    <mat-sidenav mode="side" opened #sidenav>
+        <button mat-button color="primary" *ngFor="let folder of mailFolders"> 
+            <div class="container">
+                <mat-icon class="grid-item">{{folder.icon}}</mat-icon>
+                <span class="grid-item">{{folder.name}}</span>
+            </div>
+        </button>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main">
+        <div>
+            <div>
+                <button mat-icon-button (click)="sidenav.toggle()"><mat-icon class="icon">menu</mat-icon></button>
+                <button mat-icon-button><mat-icon class="icon">arrow_back</mat-icon></button>
+                {{mails[0].title}}
+            </div>
+    
+            <div>
+                <div>
+                   {{mails[0].body}} 
+                </div>
+            </div>
+            <!-- <div>
+                <button mat-icon-button (click)="sidenav.toggle()"><mat-icon class="icon">menu</mat-icon></button>
+                Mails
+            </div> -->
+            <!-- <div class="mail-item" *ngFor="let mail of mails">
+                <mat-checkbox color="primary"> </mat-checkbox>
+                <button mat-icon-button (click)="mail.starred = !mail.starred" color="accent">
+                    <mat-icon>{{mail.starred ? "star" : "star_border"}}</mat-icon>
+                </button>
+                <span>{{mail.title}}</span>
+            </div> -->
+        </div>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>
+
+
+<!-- 
+<ul>
+    <button mat-button color="primary" *ngFor="let folder of mailFolders">
+        <div class="container">
+            <li>
+                <mat-icon class="grid-item">{{folder.icon}}</mat-icon>
+                <span class="grid-item">{{folder.name}}</span>
+            </li>
+        </div>
+    </button>
+</ul> 
+-->
