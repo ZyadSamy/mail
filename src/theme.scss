@@ -17,37 +17,33 @@ $custom-theme2: mat.define-light-theme(
   (
     color: (
       primary: mat.define-palette(mat.$indigo-palette, 800),
-      accent: mat.define-palette(mat.$amber-palette, 500)
+      accent: mat.define-palette(mat.$amber-palette, 500),
     ),
   )
 );
 
 $dark-theme: mat.define-dark-theme(
-    (
-      color: (
-        primary: mat.define-palette(mat.$amber-palette, 500),
-        accent: mat.define-palette(mat.$amber-palette, A200, A100, A400)
-      ),
-    )
-  );
+  (
+    color: (
+      primary: mat.define-palette(mat.$amber-palette, 500),
+      accent: mat.define-palette(mat.$amber-palette, A200, A100, A400),
+    ),
+  )
+);
 
-  
-  // @include mat.form-field-theme($dark-theme);
-  
+// @include mat.form-field-theme($dark-theme);
 
-app-mails {
-    @include mat.form-field-theme($dark-theme);
-    @include mat.button-theme($custom-theme2);
+app-main {
+  @include mat.form-field-theme($dark-theme);
+  @include mat.button-theme($custom-theme2);
 }
 
 app-compose {
-  @include mat.form-field-theme($custom-theme1)
+  @include mat.form-field-theme($custom-theme1);
 }
-
 
 // app-mails .mail {
 //     @include mat.all-component-themes($dark-theme);
 // }
-
 
 // @include mat.all-component-themes($dark-theme);

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AccountService } from './account.service';
 
@@ -9,23 +10,14 @@ import { AccountService } from './account.service';
 export class MailService {
   constructor(
     private http: HttpClient,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private router : Router
   ) {}
 
   backendUrl = 'http://localhost:8080';
   currentMail;
   account;
   mails;
-
-  getAccountDetails(email: string) {
-    return this.http.get(this.backendUrl + '/accounts/get', {
-      responseType: 'json',
-      observe: 'response',
-      params: {
-        email: email,
-      },
-    });
-  }
 
   sendMail(mail: {
     sender: string;
@@ -50,13 +42,10 @@ export class MailService {
     this.http.post(this.backendUrl + '/mail/create', newMail).subscribe();
   }
 
-  getMail(i: number) {
-    return this.mails[i];
+  getMail(id: number) {
+    console.log(this.mails)
   }
 
-  viewMail(i: number) {
-    this.currentMail = this.mails[i];
-  }
 
   removeMail(mail: any) {
     this.mails.splice(this.mails.indexOf(mail), 1);

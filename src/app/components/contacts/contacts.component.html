@@ -1,0 +1,36 @@
+<div class="container">
+    <a routerLink="/mails">
+        <mat-icon>arrow_back</mat-icon>
+    </a>
+    <div class="add-contact">
+        <form [formGroup]="contactForm" autocomplete="off">
+    
+            <mat-form-field appearance="outline">
+                <mat-label>Name</mat-label>
+                <input type="text" matInput formControlName="name">
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input type="email" matInput formControlName="email">
+            </mat-form-field>
+
+            <button mat-flat-button color="accent" (click)="onAdd()">Add</button>
+    
+        </form>
+    </div>
+
+    <div class="contacts">        
+        <mat-card *ngFor="let contact of contacts">
+            <mat-card-title>{{contact.name}}</mat-card-title>
+            <mat-card-content>
+                {{contact.mailAddresses}}
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-flat-button color="warn" (click)="onDelete(contact)">Delete</button>
+                <button mat-flat-button color="primary" (click)="onEdit(contact)">Edit</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+</div>

@@ -1,83 +1,74 @@
 
 <div class="container">
-    <div class="top-bar">
-        <mat-form-field appearance="outline" class="search">
-            <mat-label>Search</mat-label>
-            <input type="search" matInput class="searchInput">
-        </mat-form-field>
-    
-        <div class="account">
-            <span class="profilePicture">{{accountEmail.charAt(0).toUpperCase()}}</span>
-            <span class="small-text">Signed in with </span>{{accountEmail}}
-            <button mat-stroked-button color="warn" class="sign-out" (click)="onSignout()">Sign out</button>
-        </div>
-    </div>
-    
-    
-    <div class="main-content">
-        <mat-sidenav-container>
-            <mat-sidenav mode="side" opened #sidenav>
-                <div class="center-horizontal">
-        
-                    <button mat-flat-button color="accent" class="compose" (click)="compose()">
-                        <mat-icon>add</mat-icon>
-                        Compose
-                    </button>
-        
-                    <button mat-button color="primary"
-                        *ngFor="let folder of mailFolders"
-                        [class]="folderSelected == folder.name ? 'folder-selected' : '' "
-                        (click)="changeFolder(folder.name)">
-                        <div class="grid-container">
-                            <mat-icon class="grid-item">{{folder.icon}}</mat-icon>
-                            <span class="grid-item">{{folder.name}}</span>
-                        </div>
-                    </button>
-        
-                </div>
-            </mat-sidenav>
-        
-        
-            <mat-sidenav-content>
-                <div class="mails">
-                    <div class="center-vertical">
-                        <button mat-icon-button (click)="sidenav.toggle()"><mat-icon class="icon">menu</mat-icon></button>
-                        <span class="mat-title">{{folderSelected}}</span>
-                        <button mat-button [matMenuTriggerFor]="sort">Sort<mat-icon>keyboard_arrow_down</mat-icon>
-                        </button>
-                        <mat-menu #sort="matMenu">
-                            <button mat-menu-item *ngFor="let sorting of sortingList">
-                                <mat-icon *ngIf="sorting.selected">check</mat-icon>
-                                {{sorting.name}}
-                            </button>
-                        </mat-menu>
+    <mat-sidenav-container>
+        <mat-sidenav mode="side" opened #sidenav>
+            <div class="center-horizontal">
+
+                <button mat-flat-button color="accent" class="compose" (click)="compose()">
+                    <mat-icon>add</mat-icon>
+                    Compose
+                </button>
+
+                <button mat-button color="primary"
+                    *ngFor="let folder of mailFolders"
+                    [class]="folderSelected == folder.name ? 'folder-selected' : '' "
+                    (click)="changeFolder(folder.name)">
+                    <div class="grid-container">
+                        <mat-icon class="grid-item">{{folder.icon}}</mat-icon>
+                        <span class="grid-item">{{folder.name}}</span>
                     </div>
-                    <div class="mail-item" *ngFor="let mail of mails"
-                        style="cursor:pointer;"
-                        [class]="curViewedMail == mail ? 'mail-selected ' : '' "
-                        (click)="mailClicked($event,mail)">
-                        <button mat-icon-button
-                            class="btn"
-                            (click)="mail.starred = !mail.starred; $event.stopPropagation();"
-                            [color]=" curViewedMail == mail ? 'accent':'primary' ">
-                            <mat-icon>{{mail.starred ? "star" : "star_border"}}</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary"(click)="compose()">
+                    <mat-icon>create_new_folder</mat-icon>
+                </button>
+            </div>
+        </mat-sidenav>
+
+
+        <mat-sidenav-content>
+            <div class="mails">
+                <div class="center-vertical">
+                    <button mat-icon-button (click)="sidenav.toggle()"><mat-icon class="icon">menu</mat-icon></button>
+                    <span class="mat-title">{{folderSelected}}</span>
+                    <button mat-button [matMenuTriggerFor]="sort">Sort<mat-icon>keyboard_arrow_down</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary"(click)="compose()">
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                    <mat-menu #sort="matMenu">
+                        <button mat-menu-item *ngFor="let sorting of sortingList">
+                            <mat-icon *ngIf="sorting.selected">check</mat-icon>
+                            {{sorting.name}}
                         </button>
-                        <span class="mat-body stop-overflow">{{mail.subject}}</span>
-                        <p class="mat-body stop-overflow">{{mail.body}}</p>
-        
-                        <button mat-icon-button (click)="removeMail(mail)" color="accent">
-                            <mat-icon color="warn">delete</mat-icon>
-                        </button>
-                    </div>
+                    </mat-menu>
                 </div>
-        
-                <div class="mail-details">
-                    <router-outlet></router-outlet>
-                    <!-- <mail-details *ngIf="mailIsViewed == true" [mail]="curViewedMail"></mail-details> -->
+                <div class="mail-item" *ngFor="let mail of mails"
+                    style="cursor:pointer;"
+                    [class]="curViewedMail == mail ? 'mail-selected ' : '' "
+                    (click)="mailClicked(mail.id)">
+                    <button mat-icon-button
+                        class="btn grid-item"
+                        (click)="mail.starred = !mail.starred; $event.stopPropagation();"
+                        [color]=" curViewedMail == mail ? 'accent':'primary' ">
+                        <mat-icon>{{mail.starred ? "star" : "star_border"}}</mat-icon>
+                    </button>
+                    <span class="mat-body stop-overflow grid-item">From: {{mail.sender.mailAddresses}} , {{mail.sender.name}}</span>
+                    <span class="mat-body stop-overflow grid-item">{{mail.subject}}</span>
+                    <p class="mat-body stop-overflow grid-item">{{mail.body}}</p>
+
+                    <button mat-icon-button (click)="removeMail(mail)" color="accent" class="grid-item">
+                        <mat-icon color="warn">delete</mat-icon>
+                    </button>
                 </div>
-            </mat-sidenav-content>
-        
-        </mat-sidenav-container>
-    </div>
+            </div>
+
+            <!-- <div class="mail-details">
+                <router-outlet></router-outlet>
+                <!-- <mail-details *ngIf="mailIsViewed == true" [mail]="curViewedMail"></mail-details> -->
+            <!-- </div> -->
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
 </div>
 

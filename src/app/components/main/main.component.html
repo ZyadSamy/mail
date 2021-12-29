@@ -1,9 +1,17 @@
-<!-- *ngIf="signedIn == true; else signIn" -->
-<div >
-    <app-mails [email]="signedEmail"></app-mails>
-</div>
-<!-- <router-outlet></router-outlet> -->
+<div class="top-bar">
+    <mat-form-field appearance="outline" class="search">
+        <mat-label>Search</mat-label>
+        <input type="search" matInput class="searchInput">
+    </mat-form-field>
 
-<!-- <ng-template #signIn>
-    <sign-in (signInEmitter)="onSignIn($event)"></sign-in>
-</ng-template> -->
+    <div class="account">
+        <span class="profilePicture">{{email.charAt(0).toUpperCase()}}</span>
+        <span class="small-text">Signed in with </span>{{email}}
+        <button mat-stroked-button color="accent" class="sign-out" (click)="gotoContacts()">Contacts</button>
+        <button mat-stroked-button color="warn" class="sign-out" (click)="onSignout()">Sign out</button>
+    </div>
+
+</div>
+<div class="main-content">
+    <router-outlet></router-outlet>
+</div>

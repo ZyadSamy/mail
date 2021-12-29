@@ -15,6 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
+import {MatPaginatorModule} from '@angular/material/paginator';
 import {
   MatSnackBarModule,
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
@@ -25,10 +26,11 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { MatRippleModule } from '@angular/material/core';
 import { SignupComponent } from './components/sign-up/signup.component';
 import { MailComponent } from './components/mails/mail.component';
-import { MainComponent } from './components/main/main.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MailDetailsComponent } from './components/mail-details/mail-details.component';
 import { ComposeComponent } from './components/compose/compose.component';
+import { ContactsComponent } from './components/contacts/contacts.component';
+import { MainComponent } from './components/main/main.component';
 
 @NgModule({
   declarations: [
@@ -36,9 +38,10 @@ import { ComposeComponent } from './components/compose/compose.component';
     SignInComponent,
     SignupComponent,
     MailComponent,
-    MainComponent,
     MailDetailsComponent,
     ComposeComponent,
+    ContactsComponent,
+    MainComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +61,7 @@ import { ComposeComponent } from './components/compose/compose.component';
     MatMenuModule,
     MatTableModule,
     MatChipsModule,
+    MatPaginatorModule
   ],
   providers: [
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2000 } },

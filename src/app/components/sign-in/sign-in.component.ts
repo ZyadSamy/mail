@@ -52,7 +52,7 @@ export class SignInComponent implements OnInit {
       validCredentials => {
         if(validCredentials) {
           this.accountService.signIn(this.email.value);
-          // this.router.navigate([''])
+          this.router.navigate([''])
         }
         else{
           // show an error

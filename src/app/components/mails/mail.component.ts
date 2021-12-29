@@ -1,8 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { JsonpClientBackend } from '@angular/common/http';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AccountService } from 'src/app/services/account.service';
 import { MailService } from 'src/app/services/mail.service';
+import { RoutingService } from 'src/app/services/routing.service';
 
 @Component({
   selector: 'app-mails',
@@ -10,9 +19,7 @@ import { MailService } from 'src/app/services/mail.service';
   styleUrls: ['./mail.component.sass'],
 })
 export class MailComponent implements OnInit {
-  @Input('email') accountEmail = '';
-
-  email = 'zyad@mail.com';
+  email = 'a@mail.com';
   folderSelected = 'Inbox';
   account;
   mails;
@@ -36,36 +43,26 @@ export class MailComponent implements OnInit {
     private accountService: AccountService,
     private mailService: MailService,
     private router: Router,
+    private routingService : RoutingService,
     private _snackBar: MatSnackBar // Service for creating prompts
   ) {}
 
   ngOnInit(): void {
-    this.mailService.getAccountDetails(this.email).subscribe((response) => {
-      console.log(response);
+    this.email = this.accountService.signedIn.email;
+    this.accountService.getAccountDetails().subscribe((response) => {
       this.account = response.body;
       this.mails = this.account.mails;
-      console.log(this.mails);
     });
   }
 
-  onSignout() {
-    this.accountService.signOut();
-    // Navigate to sign-in
-    this.router.navigate(['/signin']);
-  }
+  
 
   changeFolder(folderName: string) {
     this.folderSelected = folderName;
   }
 
-  mailClicked(e, mail) {
-    if (this.curViewedMail == mail) {
-      this.mailIsViewed = !this.mailIsViewed;
-      this.curViewedMail = {};
-    } else {
-      this.mailIsViewed = true;
-      this.curViewedMail = mail;
-    }
+  mailClicked(id) {
+    this.routingService.goToMail(id);
   }
 
   removeMail(mail) {

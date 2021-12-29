@@ -21,22 +21,27 @@ export class ComposeComponent implements OnInit {
   ReqJson: any = {};
 
   uploadFiles(e) {
-    let file = e.target.files;
-    console.log('file', file);
-    for (let i = 0; i < file.length; i++) {
-      this.formData.append('file', file[i], file[i]['name']);
+    let files = e.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.formData.append('file', files[i], files[i]['name']);
+      this.files.push(files[i]['name'])
     }
+    this.formData.forEach( data => {console.log(data)})
   }
+
+  addFiles() {}
 
   RequestUpload() {
     this.ReqJson['mailID'] = '12';
     this.formData.append('Info', JSON.stringify(this.ReqJson));
-    
-    this.http
-      .post('http://localhost:8080/file/upload', this.formData)
-      .subscribe(() => {});
+    this.formData.forEach( data => {console.log(data)})
+
+    this.formData.forEach(file => {
+      this.http
+        .post('http://localhost:8080/file/upload', file)
+        .subscribe(() => {});
+    })
   }
-  
 
   composeForm: FormGroup;
   receivers = ['account1@mail.com', 'account2@mail.com'];
