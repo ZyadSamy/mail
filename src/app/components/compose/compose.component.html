@@ -1,0 +1,103 @@
+<div class="compose-header">
+    <span class="mat-title title">New mail</span>
+    <span class="right-align">
+        <button mat-icon-button color="warn"><mat-icon>close</mat-icon></button>
+    </span>
+</div>
+<div class="container" style="padding: 10px;">
+    <form [formGroup]="composeForm" class="container" autocomplete="off">
+        
+        <div class="receivers-container">
+            <div class="center-vertical">
+                <mat-form-field style="width:100%">
+                    <mat-label>To</mat-label>
+                    <input type="text" matInput formControlName="to">
+                </mat-form-field>
+                <button mat-icon-button color="primary" (click)="addReceiver()">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </div>
+        
+            <mat-chip-list>
+                <mat-chip *ngFor="let receiver of receivers">
+                    {{receiver}}
+                    <button mat-icon-button (click)="deleteReceiver(receiver)">
+                        <div class="center">
+                            <mat-icon>cancel</mat-icon>
+                        </div>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+
+        <mat-form-field>
+            <mat-label>Subject</mat-label>
+            <input type="text" matInput formControlName="subject">
+        </mat-form-field>
+        
+
+        <mat-form-field appearance="outline">
+            <mat-label>Body</mat-label>
+            <textarea matInput formControlName="body"></textarea>
+        </mat-form-field>
+
+    </form>
+    
+    
+    
+    <div class="attachments">
+        <span class="mat-h4" style="font-weight: 500; margin: 0px;">Attachments:</span>
+        <div class="add-attachment">
+            <input type="file" (change)="uploadFiles($event)" multiple>
+            <button type="button" (click)="RequestUpload()">Ok</button>
+        </div>
+        <mat-chip-list>
+            <mat-chip *ngFor="let file of files">
+                {{file}}
+                <button mat-icon-button (click)="deleteFile(file)">
+                    <div class="center">
+                    <mat-icon>cancel</mat-icon>
+                    </div>
+                </button>
+            </mat-chip>
+        </mat-chip-list>
+    </div>
+
+    <button mat-flat-button color="primary" (click)="onSend()">Send</button>
+    <button mat-flat-button color="warn">Cancel</button>
+</div>
+
+
+
+
+
+
+<!-- <div class="info">
+    <span>From : </span>
+    <span>Me</span>
+</div>
+
+<div class="info">
+<span>Subject : </span>
+<mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input type="email" matInput>
+</mat-form-field></div>
+
+
+<div class="info">
+    <span>To : </span>
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input type="text" matInput>
+    </mat-form-field>
+</div>
+
+
+
+<div>
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput>
+    </mat-form-field>
+</div> -->

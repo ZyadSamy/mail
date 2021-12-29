@@ -1,0 +1,46 @@
+<div class="container">
+    <mat-card>
+        <mat-card-title>Sign up</mat-card-title>
+    
+        <form [formGroup]="signUpForm" autocomplete="off">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" matInput>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline" style="margin-bottom: 20px;">
+                <mat-label>Username</mat-label>
+                <input type="text" formControlName="username" matInput>
+                <span matSuffix>@mail.com</span>
+                <mat-hint>This will be used to login with</mat-hint>
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input type="password" matInput formControlName="password">
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+                <mat-label>Confirm password</mat-label>
+                <input type="password" matInput formControlName="confirmPassword">
+            </mat-form-field>
+    
+        </form>
+
+        <div class="right-align">
+            <button mat-button color="primary" 
+                (click)="gotoSignin()">
+                Already have an account
+            </button>
+
+            <button 
+                mat-flat-button color="primary"
+                class="mainButton" 
+                [disabled]="signUpForm.invalid" 
+                (click)="onSignup()">Sign up
+            </button> 
+        </div>
+
+    </mat-card>
+</div>

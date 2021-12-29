@@ -1,0 +1,26 @@
+<div class="container">
+    <mat-card>
+        <mat-card-title>Sign in</mat-card-title>
+    
+        <form [formGroup]="loginForm" autocomplete="off">
+    
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input type="email" matInput formControlName="email">
+            </mat-form-field>
+        
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input type="password" matInput formControlName="password">
+            </mat-form-field>
+    
+        </form>
+    
+        <div class="right-align">
+            <button mat-button color="primary" (click)="gotoSignup()">Create account</button>
+            <button mat-flat-button color="warn" [disabled]="loginForm.invalid" class="mainButton"
+                (click)="onSignin()">Sign In</button>
+        </div>
+
+    </mat-card>
+</div>
