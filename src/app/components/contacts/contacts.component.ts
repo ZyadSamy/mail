@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AccountService } from 'src/app/services/account.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EditContactComponent } from './edit-contact/edit-contact.component';
+import { RoutingService } from 'src/app/services/routing.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-contacts',
@@ -8,68 +12,77 @@ import { AccountService } from 'src/app/services/account.service';
   styleUrls: ['./contacts.component.sass'],
 })
 export class ContactsComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder, private accountService: AccountService) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private accountService: AccountService,
+    private routingService: RoutingService,
+    private editContactDialog: MatDialog,
+  ) {}
 
   contactForm;
   account;
-  contacts = [
-    {
-      name: 'Zyad',
-      mailAddresses: 'zyad@mail.com',
-    },
-    {
-      name: 'name',
-      mailAddresses: 'account1@mail.com',
-    },
-    {
-      name: 'name2',
-      mailAddresses: 'account2@mail.com',
-    },
-    {
-      name: 'name2',
-      mailAddresses: 'account2@mail.com',
-    },
-    {
-      name: 'name2',
-      mailAddresses: 'account2@mail.com',
-    },
-  ];
-
+  contacts;
+  
   ngOnInit(): void {
     this.contactForm = this.formBuilder.group({
       name: '',
       email: '',
     });
 
-    this.accountService.getAccountDetails().subscribe(
-      response => {
-        this.account = response.body;
-        this.contacts = this.account.contacts;
-      }
-    )
+    this.fetchContacts();
+  }
+  
+  fetchContacts() {
+    this.accountService.getContacts().subscribe((response) => {
+      this.contacts = response;
+    });
   }
 
   onAdd() {
     let name = this.contactForm.get('name').value;
     let email = this.contactForm.get('email').value;
 
-    if(name != "" || email != "") {
-      this.contacts.push(
-        {
-          name : name,
-          mailAddresses: email
-        }
-      )
+    if (name != '' || email != '') {
+      const contact = {
+        name: name,
+        mailAddresses: email,
+      };
+
+      if (this.contacts == null) {
+        this.contacts = [];
+      }
+      this.contacts.push(contact);
+      this.accountService.addContact(contact).subscribe();
     }
+
+    // Reset textboxes
+    this.contactForm.get('name').setValue('');
+    this.contactForm.get('email').setValue('');
   }
 
   onDelete(contact) {
-    this.contacts.splice(this.contacts.indexOf(contact), 1)
+    this.accountService.deleteContact(contact).subscribe(() => {this.fetchContacts();});
   }
 
   onEdit(contact) {
-    this.contacts.splice(this.contacts.indexOf(contact), 1)
-    this.contactForm.get('name').setValue(contact.name);
-    this.contactForm.get('email').setValue(contact.mailAddresses);
+    let oldContactName = contact.name;
+    let dialogRef = this.editContactDialog.open(EditContactComponent, {
+      data: contact,
+    });
+
+    dialogRef.afterClosed().subscribe((dialogData) => {
+      // Checks that the dialog returned a value (wasn't canceled)
+      if (dialogData != undefined) {
+        this.accountService.editContact(oldContactName, dialogData).subscribe();
+      }
+      else{
+        this.fetchContacts();
+      }
+    });
+  }
+
+
+  goBack() {
+    this.routingService.returnToMails();
   }
 }

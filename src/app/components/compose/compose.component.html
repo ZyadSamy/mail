@@ -1,19 +1,27 @@
 <div class="center">
     <div class="body">
-        <div class="compose-header">
+        <div class="compose-header center-horizontal">
+            <button mat-stroked-button (click)="onClose()">
+                <mat-icon>arrow_back</mat-icon>
+                Back
+            </button>
             <span class="mat-title title">New mail</span>
-            <span class="right-align">
-                <button mat-icon-button color="warn"><mat-icon>close</mat-icon></button>
-            </span>
         </div>
         <div class="container" style="padding: 10px;">
-            <form [formGroup]="composeForm" class="container" autocomplete="off">
+            <form [formGroup]="composeForm" class="container" autocomplete="off" >
         
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-label class="mat-subheading-2" style="padding: 10px;">From contacts:</mat-label>
+                    <mat-option *ngFor="let contact of contacts" [value]="contact.mailAddresses" (click)="addReceiver()">
+                      {{contact.name}}
+                    </mat-option>
+                </mat-autocomplete>
+
                 <div class="receivers-container">
                     <div class="center-vertical">
                         <mat-form-field style="width:100%">
                             <mat-label>To</mat-label>
-                            <input type="text" matInput formControlName="to">
+                            <input type="text" matInput formControlName="to" [matAutocomplete]="auto" >
                         </mat-form-field>
                         <button mat-icon-button color="primary" (click)="addReceiver()">
                             <mat-icon>add</mat-icon>
@@ -45,32 +53,16 @@
         
             </form>
         
-        
-        
             <div class="attachments">
                 <span class="mat-h4" style="font-weight: 500; margin: 0px;">Attachments:</span>
                 <div class="add-attachment">
-                    <input type="file" (change)="uploadFiles($event)" multiple>
-                    <!-- <button type="button" (click)="RequestUpload()">Ok</button> -->
+                    <input type="file" multiple (change)="selectFiles($event)" />
                 </div>
-                <mat-chip-list>
-                    <mat-chip *ngFor="let file of files">
-                        {{file}}
-                        <button mat-icon-button (click)="deleteFile(file)">
-                            <div class="center">
-                            <mat-icon>cancel</mat-icon>
-                            </div>
-                        </button>
-                    </mat-chip>
-                </mat-chip-list>
             </div>
         
             <button mat-flat-button color="primary" (click)="onSend()">Send</button>
-            <button mat-flat-button color="warn">Cancel</button>
+            <button mat-button (click)="saveDraft()">Save as draft</button>
         </div>
-        
-        
-        
         
     </div>
 </div>

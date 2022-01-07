@@ -1,8 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+import { AccountService } from 'src/app/services/account.service';
 import { MailService } from 'src/app/services/mail.service';
+import { RoutingService } from 'src/app/services/routing.service';
+import { UploadFileService } from 'src/app/services/upload-file.service';
 
 @Component({
   selector: 'app-compose',
@@ -12,40 +16,13 @@ import { MailService } from 'src/app/services/mail.service';
 export class ComposeComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
+    private accountService: AccountService,
     private mailService: MailService,
+    private routingService: RoutingService,
     private _snackBar: MatSnackBar,
+    private uploadService: UploadFileService,
     private http: HttpClient
   ) {}
-
-  public formData = new FormData();
-  ReqJson: any = {};
-
-  uploadFiles(e) {
-    let files = e.target.files;
-    for (let i = 0; i < files.length; i++) {
-      this.formData.append('file', files[i], files[i]['name']);
-      this.files.push(files[i]['name'])
-    }
-    this.formData.forEach( data => {console.log(data)})
-  }
-
-  addFiles() {}
-
-  RequestUpload() {
-    this.ReqJson['mailID'] = '12';
-    this.formData.append('Info', JSON.stringify(this.ReqJson));
-    this.formData.forEach( data => {console.log(data)})
-
-    this.formData.forEach(file => {
-      this.http
-        .post('http://localhost:8080/file/upload', file)
-        .subscribe(() => {});
-    })
-  }
-
-  composeForm: FormGroup;
-  receivers = ['account1@mail.com', 'account2@mail.com'];
-  files = ['file1.pdf', 'file2.pdf'];
 
   ngOnInit(): void {
     this.composeForm = this.formBuilder.group({
@@ -53,11 +30,21 @@ export class ComposeComponent implements OnInit {
       subject: [''],
       body: [''],
     });
+
+    this.accountService.getContacts().subscribe((response) => {
+      this.contacts = response;
+    });
+
+    this.uploadService.getCounter().subscribe((response) => {
+      this.mail_id = response;
+    });
   }
 
-  deleteFile(file: string) {
-    this.files.splice(this.files.indexOf(file), 1);
-  }
+  mail_id;
+  composeForm: FormGroup;
+  receivers = [];
+  files = [];
+  contacts;
 
   deleteReceiver(receiver) {
     this.receivers.splice(this.receivers.indexOf(receiver), 1);
@@ -68,6 +55,9 @@ export class ComposeComponent implements OnInit {
     if (receiver != '') {
       this.receivers.push(receiver);
     }
+
+    // Reset textbox
+    this.composeForm.get('to').setValue('');
   }
 
   onSend() {
@@ -77,10 +67,31 @@ export class ComposeComponent implements OnInit {
         receivers: this.receivers,
         subject: this.composeForm.get('subject').value,
         body: this.composeForm.get('body').value,
+        date: new Date(),
       };
 
-      this.mailService.sendMail(mail);
+      // Upload Files
+      this.uploadFiles();
+      // Send mail
+      this.mailService.sendMail(mail, false);
+      // show a message
+      this._snackBar.open('Mail sent');
+      // redirect to mails page
+      this.routingService.returnToMails();
     }
+  }
+
+  saveDraft() {
+    let mail = {
+      sender: '',
+      receivers: this.receivers,
+      subject: this.composeForm.get('subject').value,
+      body: this.composeForm.get('body').value,
+      date: new Date(),
+    };
+
+    this.uploadFiles();
+    this.mailService.sendMail(mail, true);
   }
 
   validate(): boolean {
@@ -95,5 +106,55 @@ export class ComposeComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  onClose() {
+    this.routingService.returnToMails();
+  }
+
+  selectedFiles?: FileList;
+  progressInfos: any[] = [];
+  message: string[] = [];
+
+  fileInfos?: Observable<any>;
+
+  selectFiles(event): void {
+    this.message = [];
+    this.progressInfos = [];
+    this.selectedFiles = event.target.files;
+  }
+
+  uploadFiles(): void {
+    this.message = [];
+
+    if (this.selectedFiles) {
+      for (let i = 0; i < this.selectedFiles.length; i++) {
+        this.upload(i, this.selectedFiles[i]);
+      }
+    }
+  }
+
+  upload(idx: number, file: File): void {
+    this.progressInfos[idx] = { value: 0, fileName: file.name };
+
+    if (file) {
+      this.uploadService.upload(file,this.mail_id).subscribe({
+        next: (event: any) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            this.progressInfos[idx].value = Math.round(
+              (100 * event.loaded) / event.total
+            );
+          } else if (event instanceof HttpResponse) {
+            const msg = 'Uploaded the file successfully: ' + file.name;
+            this.message.push(msg);
+          }
+        },
+        error: (err: any) => {
+          this.progressInfos[idx].value = 0;
+          const msg = 'Could not upload the file: ' + file.name;
+          this.message.push(msg);
+        },
+      });
+    }
   }
 }

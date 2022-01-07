@@ -19,54 +19,73 @@
                     </div>
                 </button>
 
-                <button mat-icon-button color="primary"(click)="compose()">
+                <!-- <button mat-icon-button color="primary"(click)="createFolder()">
                     <mat-icon>create_new_folder</mat-icon>
-                </button>
+                </button> -->
             </div>
         </mat-sidenav>
 
 
         <mat-sidenav-content>
-            <div class="mails">
-                <div class="center-vertical">
-                    <button mat-icon-button (click)="sidenav.toggle()"><mat-icon class="icon">menu</mat-icon></button>
-                    <span class="mat-title">{{folderSelected}}</span>
-                    <button mat-button [matMenuTriggerFor]="sort">Sort<mat-icon>keyboard_arrow_down</mat-icon>
-                    </button>
-                    <button mat-icon-button color="primary"(click)="compose()">
-                        <mat-icon>refresh</mat-icon>
-                    </button>
-                    <mat-menu #sort="matMenu">
-                        <button mat-menu-item *ngFor="let sorting of sortingList">
-                            <mat-icon *ngIf="sorting.selected">check</mat-icon>
-                            {{sorting.name}}
-                        </button>
-                    </mat-menu>
-                </div>
-                <div class="mail-item" *ngFor="let mail of mails"
-                    style="cursor:pointer;"
-                    [class]="curViewedMail == mail ? 'mail-selected ' : '' "
-                    (click)="mailClicked(mail.id)">
-                    <button mat-icon-button
-                        class="btn grid-item"
-                        (click)="mail.starred = !mail.starred; $event.stopPropagation();"
-                        [color]=" curViewedMail == mail ? 'accent':'primary' ">
-                        <mat-icon>{{mail.starred ? "star" : "star_border"}}</mat-icon>
-                    </button>
-                    <span class="mat-body stop-overflow grid-item">From: {{mail.sender.mailAddresses}} , {{mail.sender.name}}</span>
-                    <span class="mat-body stop-overflow grid-item">{{mail.subject}}</span>
-                    <p class="mat-body stop-overflow grid-item">{{mail.body}}</p>
+            <div class="center-vertical" style="padding:10px;">
+                <!-- Menu hide button -->
+                <button mat-icon-button (click)="sidenav.toggle()"><mat-icon class="icon">menu</mat-icon></button>
+                <!-- Selected folder name -->
+                <span class="mat-h2">{{folderSelected}}</span>
+                <!-- Sort dropdown menu -->
+                <button mat-button [matMenuTriggerFor]="sort">Sort<mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+                <!-- refresh icon -->
+                <button mat-icon-button color="primary"(click)="fetchMails()">
+                    <mat-icon>refresh</mat-icon>
+                </button>
 
-                    <button mat-icon-button (click)="removeMail(mail)" color="accent" class="grid-item">
-                        <mat-icon color="warn">delete</mat-icon>
+                <!-- Sorting -->
+                <mat-menu #sort="matMenu">
+                    <button mat-menu-item *ngFor="let sortingMethod of sortingList" (click)="changeSortingMethod(sortingMethod)">
+                        <mat-icon *ngIf="sortingMethod.selected">check</mat-icon>
+                        {{sortingMethod.name}}
                     </button>
+                </mat-menu>
+            </div>
+            
+            <!-- mails -->
+            <div class="mail-item" 
+                *ngFor="let mail of mails"
+                style="cursor:pointer;"
+                (click)="mailClicked(mail.id)">
+
+                <!-- Mail Receivers -->
+                <div class="mat-body stop-overflow grid-item" *ngIf="mail.type == 'Sent'|| mail.type == 'Draft'; else sender">
+                    <strong>To: </strong>
+                    <span *ngFor="let receiver of mail.receivers">
+                        {{receiver.mailAddresses}}
+                        <ng-template [ngIf]="mail.receivers.length > 1">, </ng-template>
+                    </span>
                 </div>
+
+                <!-- Mail Sender -->
+                <ng-template #sender>
+                    <div class="mat-body stop-overflow grid-item">
+                        <strong>From: </strong>
+                        {{mail.sender.name}} <br>
+                        <i>{{mail.sender.mailAddresses}}</i>
+                    </div>
+                </ng-template>
+
+                <!-- Mail Subject -->
+                <span class="mat-body stop-overflow grid-item">
+                    <strong>Subject: </strong>
+                    <br>{{mail.subject}}
+                </span>
+                <p class="mat-body stop-overflow grid-item">{{mail.body}}</p>
+
+                <!-- Mail Delete -->
+                <button mat-icon-button (click)="removeMail(mail); $event.stopPropagation();" color="accent" class="grid-item">
+                    <mat-icon color="warn">delete</mat-icon>
+                </button>
             </div>
 
-            <!-- <div class="mail-details">
-                <router-outlet></router-outlet>
-                <!-- <mail-details *ngIf="mailIsViewed == true" [mail]="curViewedMail"></mail-details> -->
-            <!-- </div> -->
         </mat-sidenav-content>
 
     </mat-sidenav-container>

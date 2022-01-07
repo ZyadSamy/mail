@@ -1,0 +1,49 @@
+<div class="center">
+    <div class="container">
+        <button mat-stroked-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+        </button>
+        
+
+        <!-- Subject -->
+        <div class="info">
+            <span><strong>Subject : </strong></span>
+            <span>{{mail.subject}}</span>
+        </div>
+
+        
+        <!-- To -->
+        <div class="info" *ngIf="(mail.type != 'Inbox'); else fromContainer">
+            <span><strong>To : </strong></span>
+            <div *ngFor="let receiver of mail.receivers">{{receiver.mailAddresses}}</div>
+        </div>
+        
+        <!-- From -->
+        <ng-template #fromContainer>
+            <div class="info">
+                <span><strong>From : </strong></span>
+                <span>{{mail.sender.mailAddresses}}</span>
+            </div>
+        </ng-template>
+
+        <!-- mail-body -->
+        <div class="mail-body">
+            {{mail.body}}
+        </div>
+
+        <!-- attachments -->
+        <div>
+            <mat-chip-list>
+                <mat-chip *ngFor="let file of files | async" (click)="downloadFile(file)">
+                    {{file.name}}
+                    <button mat-icon-button>
+                        <div class="center">
+                            <mat-icon>download</mat-icon>
+                        </div>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>
+</div>

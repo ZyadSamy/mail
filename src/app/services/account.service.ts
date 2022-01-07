@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { MailService } from './mail.service';
 
 @Injectable({
@@ -10,16 +11,10 @@ export class AccountService {
 
   private readonly backEndUrl = 'http://localhost:8080';
 
-  // TEMP
   private _signedIn = {
-    status: true,
-    email: 'account2@mail.com',
+    status: false,
+    email: '',
   };
-  // private _signedIn = {
-  //   status: false,
-  //   email: '',
-  // };
-  account;
 
   get signedIn() {
     return this._signedIn;
@@ -36,36 +31,18 @@ export class AccountService {
     );
   }
 
-  getAccountDetails() {
-    return this.http.get(this.backEndUrl + '/view', {
-      responseType: 'json',
-      observe: 'response',
-      params: {
-        account: this.signedIn.email,
-      },
-    });
-  }
-
-
-  getMail(id: number) {
-    console.log(this.account.mails)
-    console.log(id)
-    for (let i = 0; i < this.account.mails.length; i++) {
-      const element = this.account.mails[i];
-      if(element.id == id){
-        return element
-      }
-    }
-    console.log("error")
-    return null
-  }
+  // getAccountDetails() {
+  //   return this.http.get(this.backEndUrl + '/view', {
+  //     responseType: 'json',
+  //     observe: 'response',
+  //     params: {
+  //       account: this.signedIn.email,
+  //     },
+  //   });
+  // }
 
   signIn(email: string) {
     this._signedIn = { status: true, email: email };
-    this.getAccountDetails().subscribe((response) => {
-      this.account = response.body;
-      console.log('Account', this.account);
-    });
   }
 
   signOut() {
@@ -73,19 +50,45 @@ export class AccountService {
   }
 
   signUp(account: { name: string; email: string; password: string }) {
-    let url = this.backEndUrl + '/accounts/create';
-    return this.http.post(url, account, {
+    return this.http.post(`${this.backEndUrl}/accounts/create`, account, {
       responseType: 'json',
       observe: 'body',
     });
   }
 
+  /* Contacts functions */
 
-  addContact(name : string, email : string) {
-    let url = this.backEndUrl + '/accounts/create';
-    this.http.post(url, {name : name, emailAddresses: email}, {
-      responseType: 'json',
-      observe: 'body',
-    }).subscribe();
+  getContacts() : Observable<any>{
+    return this.http.get(`${this.backEndUrl}/contacts`, {
+      params: { user: this.signedIn.email },
+    });
+  }
+
+  addContact(contact) {
+    return this.http.post(`${this.backEndUrl}/contacts/add`, contact, {
+      params: {
+        user: this.signedIn.email,
+      },
+    });
+  }
+
+  editContact(oldContactName: string, newContactDetails) {
+    return this.http.post(
+      `${this.backEndUrl}/contacts/edit`,
+      newContactDetails,
+      {
+        params: {
+          user: this.signedIn.email,
+          oldContactName: oldContactName,
+        },
+      }
+    );
+  }
+
+  deleteContact(contact) {
+    return this.http.delete(`${this.backEndUrl}/contacts/delete`, {
+      params: { user: this.signedIn.email },
+      body: contact,
+    });
   }
 }

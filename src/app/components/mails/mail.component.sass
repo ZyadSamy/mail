@@ -18,7 +18,7 @@ mat-sidenav-container
     height: 100%
     
     mat-sidenav   
-        background-color: #cfcdcd //#406882, #6998AB, #B1D0E0, DBE2EF, 49566941
+        background-color: #cfcdcd //#406882, #6998AB, #B1D0E0, #DBE2EF, #49566941
         width: 200px
         display: flex
         align-items: center
@@ -51,45 +51,30 @@ mat-sidenav-container
 
     mat-sidenav-content
         display: flex
-        .mails
-            width: 100%
-            background-color: white
-            border-right: 2px solid $primary-color
-            border-left: 2px solid $primary-color
-        // .mail-details
-        //     padding: 15px
-        //     width: 60%
-        //     background-color: white
-            
-
+        flex-direction: column
+        background-color: white
+        border-right: 2px solid $primary-color
+        border-left: 2px solid $primary-color
+          
 
 .mail-item
+    height: 60px
+    padding: 10px
+    padding-left: 20px
+
     display: grid
-    grid-template-columns: 50px 1.75fr 1fr 2fr 50px
+    grid-template-columns: 1.75fr 1fr 2fr 50px
     justify-content: start
     align-items: center
-    // border-bottom: 1px solid white
-    height: 50px
-    // padding-left: 20px
     grid-column-gap: 5px
-    // background-color: #cfcdcd
 
-    .grid-item
-        // border-right: 1px solid black
+    &:hover
+        background-color: #49566941
+    &:active
+        background-color: #414d5f94
 
-.mail-selected 
-    background-color: #283593
-    color: white
-    
-.mail-unread
-    font-weight: bold
-    
-.mail-read
-    font-weight: normal
-    background-color: grey
 
 .stop-overflow
-
     text-overflow: ellipsis
     white-space: nowrap
     overflow: hidden

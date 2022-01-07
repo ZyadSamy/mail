@@ -1,14 +1,20 @@
 <div class="top-bar">
+    <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let mail of searchList" (click)="searchMailClicked(mail.id)">
+          "{{mail.subject}}" From {{mail.sender.mailAddresses}}
+        </mat-option>
+    </mat-autocomplete>
+
     <mat-form-field appearance="outline" class="search">
         <mat-label>Search</mat-label>
-        <input type="search" matInput class="searchInput">
+        <input type="search" matInput class="searchInput" [matAutocomplete]="auto" [ngModel]="searchText" (ngModelChange)="search($event)">
     </mat-form-field>
 
     <div class="account">
         <span class="profilePicture">{{email.charAt(0).toUpperCase()}}</span>
         <span class="small-text">Signed in with </span>{{email}}
-        <button mat-stroked-button color="accent" class="sign-out" (click)="gotoContacts()">Contacts</button>
-        <button mat-stroked-button color="warn" class="sign-out" (click)="onSignout()">Sign out</button>
+        <button mat-button color="accent" class="sign-out" (click)="gotoContacts()">Contacts</button>
+        <button mat-button color="warn" class="sign-out" (click)="onSignout()">Sign out</button>
     </div>
 
 </div>

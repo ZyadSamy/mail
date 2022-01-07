@@ -1,7 +1,8 @@
 <div class="container">
-    <a routerLink="/mails">
+    <button mat-stroked-button (click)="goBack()" style="margin-bottom: 10px;">
         <mat-icon>arrow_back</mat-icon>
-    </a>
+        Back
+    </button>
     <div class="add-contact">
         <form [formGroup]="contactForm" autocomplete="off">
     

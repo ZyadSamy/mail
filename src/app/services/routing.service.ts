@@ -24,4 +24,8 @@ export class RoutingService {
   gotoContacts() {
     this.router.navigate(['/contacts'])
   }
+
+  gotoCompose() {
+    this.router.navigate(['/compose'])
+  }
 }
