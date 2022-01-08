@@ -31,16 +31,6 @@ export class AccountService {
     );
   }
 
-  // getAccountDetails() {
-  //   return this.http.get(this.backEndUrl + '/view', {
-  //     responseType: 'json',
-  //     observe: 'response',
-  //     params: {
-  //       account: this.signedIn.email,
-  //     },
-  //   });
-  // }
-
   signIn(email: string) {
     this._signedIn = { status: true, email: email };
   }
@@ -58,7 +48,7 @@ export class AccountService {
 
   /* Contacts functions */
 
-  getContacts() : Observable<any>{
+  getContacts(): Observable<any> {
     return this.http.get(`${this.backEndUrl}/contacts`, {
       params: { user: this.signedIn.email },
     });

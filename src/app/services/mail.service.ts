@@ -60,9 +60,6 @@ export class MailService {
       .subscribe();
   }
 
-  getCurrentMailViewed() {
-    return this.currentMail;
-  }
 
   getSortedMails(sortMethod: string) {
     console.log(this.mails)
@@ -75,31 +72,3 @@ export class MailService {
   }
 }
 
-// mock mails
-// mails = [
-//   {
-//     id: 0,
-//     subject: 'first mail',
-//     sender: 'sender@mail.com',
-//     receiver: 'receiver@mail.com',
-//     body: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis, itaque voluptatum autem odit amet dolores eveniet ipsum id voluptatibus quibusdam quas libero numquam. Ipsum necessitatibus itaque suscipit impedit magnam fuga!',
-//     date: new Date(),
-//     starred: false,
-//   },
-
-//   {
-//     id: 1,
-//     subject: 'second mail',
-//     body: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis, itaque voluptatum autem odit amet dolores eveniet ipsum id voluptatibus quibusdam quas libero numquam. Ipsum necessitatibus itaque suscipit impedit magnam fuga!',
-//     date: new Date(),
-//     starred: false,
-//   },
-
-//   {
-//     id: 2,
-//     subject: 'starred mail',
-//     body: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis, itaque voluptatum autem odit amet dolores eveniet ipsum id voluptatibus quibusdam quas libero numquam. Ipsum necessitatibus itaque suscipit impedit magnam fuga!',
-//     date: new Date(),
-//     starred: true,
-//   },
-// ];
